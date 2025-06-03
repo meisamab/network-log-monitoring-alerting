@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syslog Logs</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Syslog Logs</h1>
+    <table id="logTable">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0)">ID</th>
+                <th onclick="sortTable(1)">Timestamp</th>
+                <th onclick="sortTable(2)">Source IP</th>
+                <th onclick="sortTable(3)">Severity</th>
+                <th onclick="sortTable(4)">Log Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td>{{ log[0] }}</td>
+                <td>{{ log[1] }}</td>
+                <td>{{ log[2] }}</td>
+                <td>{{ log[3] }}</td>
+                <td>{{ log[4] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        let sortDirections = [true, true, true, true, true]; // Track sorting direction for each column (true = ascending, false = descending)
+
+        function sortTable(columnIndex) {
+            const table = document.getElementById("logTable");
+            const rows = Array.from(table.rows).slice(1); // Skip the header row
+            const isNumeric = columnIndex === 0 || columnIndex === 1; // ID and Timestamp columns are numeric
+
+            // Toggle the sorting direction for the clicked column
+            sortDirections[columnIndex] = !sortDirections[columnIndex];
+
+            rows.sort((rowA, rowB) => {
+                const cellA = rowA.cells[columnIndex].innerText;
+                const cellB = rowB.cells[columnIndex].innerText;
+
+                if (isNumeric) {
+                    // Convert to number for sorting if numeric
+                    return sortDirections[columnIndex] ? parseFloat(cellA) - parseFloat(cellB) : parseFloat(cellB) - parseFloat(cellA);
+                } else {
+                    // Otherwise sort as strings
+                    return sortDirections[columnIndex] ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+                }
+            });
+
+            // Reorder the rows in the table
+            rows.forEach(row => table.appendChild(row));
+        }
+    </script>
+</body>
+</html>

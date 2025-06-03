@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syslog Viewer</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Syslog Data</h1>
+
+    <table id="logsTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Timestamp</th>
+                <th>Source IP</th>
+                <th>Severity</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Logs will be inserted here dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        async function getData() {
+            const url = "http://127.0.0.1:8000/logs";
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log("Fetched Logs:", data);
+
+                // Update the table with logs
+                populateTable(data.logs);
+            } catch (error) {
+                console.error("Error fetching logs:", error.message);
+            }
+        }
+
+        function populateTable(logs) {
+            const tableBody = document.querySelector("#logsTable tbody");
+            tableBody.innerHTML = "";  // Clear previous entries
+
+            logs.forEach(log => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${log.id}</td>
+                    <td>${log.timestamp}</td>
+                    <td>${log.source_ip}</td>
+                    <td>${log.severity}</td>
+                    <td>${log.log_message}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Fetch logs when the page loads
+        getData();
+
+        // WebSocket connection to FastAPI
+        const ws = new WebSocket("ws://127.0.0.1:8000/ws");
+
+        ws.onopen = () => {
+            console.log("Connected to WebSocket!");
+        };
+
+        ws.onmessage = (event) => {
+            console.log("Event data:", event.data);
+            getData();  // Re-fetch logs when an update occurs
+        };
+
+        ws.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+
+        ws.onclose = () => {
+            console.log("WebSocket connection closed.");
+        };
+    </script>
+
+</body>
+</html>
