@@ -23,7 +23,7 @@ Automates:
 - `encrypt_passwords()` – encrypts credentials in `config.yaml`
 - `config_syslog_cisco()` – configures Cisco for syslog
 
-### `config.yaml`
+### [`config.yaml`](./config.yaml)
 Stores encrypted credentials & syslog server IP
 
 #### 📄 Example:
@@ -39,14 +39,14 @@ syslog_server:
   ip: 192.168.100.10
 ```
 
-### `syslog_server.py`
+### [`syslog_server.py`](./syslog_server.py)
 Listens to syslog messages and logs to `syslogs.db`
 - `create_db()`, `parse_log()`, `insert_log()`, `syslog_server()`
 
-### `verify_logs.py`
+### [`verify_logs.py`](./verify_logs.py)
 CLI tool to query and display stored logs.
 
-### `app.py`
+### [`app.py`](./app.py)
 Flask web app showing logs in browser (`logs.html`)
 
 ---
