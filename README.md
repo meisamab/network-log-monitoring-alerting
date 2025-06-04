@@ -1,100 +1,114 @@
-# Syslog Server and Device Configuration Project
+# 🔒 Network Log Monitoring & Alerting System
 
-This repository provides a solution for configuring Cisco devices to send syslog messages to a central server, storing them in a database, and offering a web interface for viewing logs. It includes encryption functionality to secure sensitive information such as device passwords.
+A complete Python-based solution for configuring Cisco devices to send syslog messages to a central server, storing them in a database, and offering both CLI and web-based interfaces to monitor and verify logs securely.
 
-## Files Overview
+---
+
+## 🧩 Features
+
+- Automatically configures Cisco devices to send syslogs  
+- Encrypts device credentials with AES key  
+- Receives and parses syslog messages via UDP  
+- Stores logs in SQLite database  
+- Real-time web UI with Flask  
+- CLI verification tool  
+
+---
+
+## 📁 Files Overview
 
 ### `auto.py`
-This Python script automates the encryption of device passwords and configures Cisco devices to send syslog messages to a server.
-
-#### Key Functions:
-- **`genKey()`**: Generates and saves an encryption key (`secret.key`) if one doesn't already exist.
-- **`encrypt_passwords()`**: Encrypts device passwords and secrets stored in a YAML configuration file.
-- **`config_syslog_cisco()`**: Configures Cisco devices to send syslog messages to a specified syslog server IP address, using the encrypted passwords for authentication.
+Automates:
+- `genKey()` – generate encryption key (`secret.key`)
+- `encrypt_passwords()` – encrypts credentials in `config.yaml`
+- `config_syslog_cisco()` – configures Cisco for syslog
 
 ### `config.yaml`
-A configuration file that stores device connection details (IP, username, password, etc.) and the syslog server's IP address. The passwords and secrets in this file are encrypted by `auto.py`.
+Stores encrypted credentials & syslog server IP
 
-Example content:
+#### 📄 Example:
 ```yaml
 devices:
   R1:
-    device_type: cisco_ios
     host: 192.168.100.2
-    password: <encrypted_password>
-    port: 22
-    secret: <encrypted_secret>
     username: admin
+    password: <encrypted>
+    secret: <encrypted>
 
 syslog_server:
   ip: 192.168.100.10
 ```
 
 ### `syslog_server.py`
-A simple syslog server that listens for syslog messages from network devices and stores them in a SQLite database. It parses incoming log messages, extracts useful information, and saves it for later viewing.
-
-#### Key Functions:
-- **`create_db()`**: Creates an SQLite database (`syslogs.db`) and a table for storing logs if they don't already exist.
-- **`insert_log()`**: Inserts parsed syslog log entries into the database.
-- **`parse_log()`**: Parses syslog messages to extract timestamp, severity, identifier, and message content.
-- **`syslog_server()`**: Main function to run the syslog server, receive log messages, and save them in the database.
+Listens to syslog messages and logs to `syslogs.db`
+- `create_db()`, `parse_log()`, `insert_log()`, `syslog_server()`
 
 ### `verify_logs.py`
-This script queries the SQLite database to verify and display the logs stored by the syslog server. It fetches all logs from the `logs` table and prints them in a readable format.
+CLI tool to query and display stored logs.
 
 ### `app.py`
-A Flask web application to display logs stored in the SQLite database through a web interface.
-
-#### Key Features:
-- **`get_logs()`**: Retrieves logs from the SQLite database, ordered by the latest entries.
-- **`home()`**: Renders a template (`logs.html`) to display the logs on the web page.
+Flask web app showing logs in browser (`logs.html`)
 
 ---
 
-## Prerequisites
+## 📦 Prerequisites
 
-- Python 3.x
-- Flask (`pip install Flask`)
-- SQLite3 (usually pre-installed with Python)
-- `cryptography` library (`pip install cryptography`)
-- `pyyaml` library (`pip install pyyaml`)
-- `netmiko` library (`pip install netmiko`)
+- Python 3.x  
+- Flask (`pip install flask`)  
+- SQLite3  
+- cryptography (`pip install cryptography`)  
+- pyyaml (`pip install pyyaml`)  
+- netmiko (`pip install netmiko`)  
 
-## Setup
+---
 
-1. **Clone the Repository**:
+## ⚙️ Setup
+
+1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/syslog-server.git
-   cd syslog-server
+   git clone https://github.com/meisamab/network-log-monitoring-alerting.git
+   cd network-log-monitoring-alerting
    ```
 
-2. **Generate the Encryption Key**:
-   Run `auto.py` to generate a new encryption key if one doesn't already exist:
-   ```bash
-   python auto.py
-   ```
-
-3. **Encrypt Passwords**:
-   Run `auto.py` to encrypt the passwords and secrets in `config.yaml`:
+2. **Generate the encryption key**
    ```bash
    python auto.py
    ```
 
-4. **Start the Syslog Server**:
-   Run `syslog_server.py` to start listening for syslog messages:
+3. **Encrypt the credentials**
+   ```bash
+   python auto.py
+   ```
+
+4. **Start the syslog server**
    ```bash
    python syslog_server.py
    ```
 
-5. **Start the Web Application**:
-   Run `app.py` to launch the web application:
+5. **Launch the web application**
    ```bash
    python app.py
    ```
-   The web app will be available at `http://localhost:5000`.
+   Access logs at: [http://localhost:5000](http://localhost:5000)
 
-## Usage
+---
 
-- **Configuring Cisco Devices**: Ensure your devices are set to send syslog messages to the specified IP address in the `config.yaml` file.
-- **Viewing Logs**: Visit the web interface at `http://localhost:5000` to view logs received by the syslog server.
-- **Verifying Logs**: Use `verify_logs.py` to check the logs stored in the SQLite database.
+## 🛠️ Usage
+
+- **Configure Cisco devices** to send syslogs to IP in `config.yaml`  
+- **View logs** on web interface at `http://localhost:5000`  
+- **Verify logs** in terminal using:
+  ```bash
+  python verify_logs.py
+  ```
+
+---
+
+## 👤 Author
+
+**Meisam Aboutorabian**  
+📍 Toronto  
+✉️ meisam.ab34@gmail.com  
+🔗 [linkedin.com/in/meisamab](https://linkedin.com/in/meisamab)
+
+> 🛡️ Developed as part of a final-year capstone project focused on real-time network log monitoring, automation, and security.
