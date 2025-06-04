@@ -17,7 +17,7 @@ A complete Python-based solution for configuring Cisco devices to send syslog me
 
 ## 📁 Files Overview
 
-### `auto.py`
+### [`auto.py`](./auto.py)
 Automates:
 - `genKey()` – generate encryption key (`secret.key`)
 - `encrypt_passwords()` – encrypts credentials in `config.yaml`
