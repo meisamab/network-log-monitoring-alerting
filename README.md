@@ -70,22 +70,17 @@ Flask web app showing logs in browser (`logs.html`)
    cd network-log-monitoring-alerting
    ```
 
-2. **Generate the encryption key**
+2. **Generate the encryption key and encrypt credentials**
    ```bash
    python auto.py
    ```
 
-3. **Encrypt the credentials**
-   ```bash
-   python auto.py
-   ```
-
-4. **Start the syslog server**
+3. **Start the syslog server**
    ```bash
    python syslog_server.py
    ```
 
-5. **Launch the web application**
+4. **Launch the web application**
    ```bash
    python app.py
    ```
